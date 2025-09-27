@@ -47,7 +47,7 @@ module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 20.24" # ✅ Latest version, fixes deprecated blocks
 
-  cluster_name    = "eks-cluster"
+  cluster_name    = "shopedge-cluster"
   cluster_version = "1.29"
 
   vpc_id     = module.vpc.vpc_id
@@ -82,7 +82,7 @@ module "eks" {
 # 4. ECR Repository
 #################################
 resource "aws_ecr_repository" "app_repo" {
-  name                 = "my-app"
+  name                 = "shop-edge"
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
@@ -109,3 +109,4 @@ output "cluster_endpoint" {
 output "ecr_repo_url" {
   value = aws_ecr_repository.app_repo.repository_url
 }
+
