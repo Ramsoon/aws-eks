@@ -1,0 +1,57 @@
+# Default values for ShopEdge
+replicaCount: 2
+
+image:
+  repository: nginx
+  tag: "alpine"
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 80
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - host: shopedge.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: shopedge-tls
+      hosts:
+        - shopedge.example.com
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+config:
+  appName: "ShopEdge"
+  environment: "dev"
+  version: "1.0.0"
+
+secret:
+  # These should be base64 encoded
+  apiKey: ""
+  databaseUrl: ""
